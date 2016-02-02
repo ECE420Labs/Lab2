@@ -23,13 +23,13 @@ int main (int argc, char* argv[])
     long thread_i;
     pthread_t* thread_handle_pt;
     double start, end;
-    
+
     if (argc < 2) {
         printf("Please indicate the number of threads!\n");
         return 1;
     }
     thread_count_ = strtol(argv[1], NULL, 10);
-    
+
     Lab2_loadinput(&dp_, &city_count_);
 
     thread_handle_pt=malloc(thread_count_*sizeof(pthread_t));
@@ -56,14 +56,16 @@ int main (int argc, char* argv[])
 void* thread_subcal(void* rank){
     long myrank = (long)rank;
     int i, j, k, temp;
-    
-    for (k = 0; k < city_count_; ++k){
+
+    for (k = 0; k < city_count_; ++k) {
         pthread_barrier_wait(&barr_);
-        for (i = myrank * city_count_ / thread_count_; i < (myrank + 1) * city_count_ / thread_count_; ++i)
-            for (j = 0; j < city_count_; ++j)
-                if ((temp = dp_[i][k]+dp_[k][j]) < dp_[i][j])
+        for (i = myrank * city_count_ / thread_count_; i < (myrank + 1) * city_count_ / thread_count_; ++i) {
+            for (j = 0; j < city_count_; ++j) {
+                if ((temp = dp_[i][k]+dp_[k][j]) < dp_[i][j]) {
                     dp_[i][j] = temp;
+                }
+            }
+        }
     }
     return 0;
 }
-
