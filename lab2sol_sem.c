@@ -79,7 +79,7 @@ void* thread_subcal(void* rank){
         for (i = myrank * city_count_ / thread_count_; i < (myrank + 1) * city_count_ / thread_count_; ++i) {
             if (i != k) {
                 // If i and k are equal, do not have to lock row k again
-                while (pthread_mutex_lock(&muts[i]) == EBUSY) {
+                while (pthread_mutex_trylock(&muts[i]) != 0) {
                     pthread_mutex_unlock(&muts[k]);
                     pthread_mutex_lock(&muts[k]);
                 }
