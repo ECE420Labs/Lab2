@@ -80,6 +80,8 @@ void* thread_subcal(void* rank){
             if (i != k) {
                 // If i and k are equal, do not have to lock row k again
                 while (pthread_mutex_trylock(&muts[i]) != 0) {
+                    // Deadlock could potentially occur; to avoid deadlock temporarily
+                    // release held resource
                     pthread_mutex_unlock(&muts[k]);
                     pthread_mutex_lock(&muts[k]);
                 }
